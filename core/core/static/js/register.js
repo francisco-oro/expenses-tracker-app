@@ -28,7 +28,6 @@ usernameField.addEventListener("keyup", (e) => {
     feedBackArea.classList.add('d-none');
 
     if (usernameVal.length > 0) {
-        $('#username_success').removeClass('d-none'); 
         $('#username_success').html(function () {
             return `${usernameVal} is avaliable`;
         })
@@ -49,6 +48,10 @@ usernameField.addEventListener("keyup", (e) => {
                 usernameField.classList.add('is-invalid');
                 feedBackArea.classList.remove('d-none');
                 feedBackArea.innerHTML = `<p class="alert alert-danger">${data.username_error}</p>`;
+                $('#submit-btn').attr("disabled", "True");
+                ('#username_success').addClass('d-none');
+            } else {
+                $('#submit-btn').removeAttr("disabled");
                 $('#username_success').addClass('d-none');
             }
         });
@@ -86,8 +89,10 @@ $('#emailField').on("keyup", function (e) {
                 $('#email_feedback').html(function () {
                     return `<p class="alert alert-danger">${data.email_error}</p>`;
                 })
+                $('#submit-btn').attr("disabled", "True");
             } else {
                 $('#emailField').addClass('is-valid');
+                $('#submit-btn').removeAttr("disabled");
             }
         });
     } else {
@@ -124,8 +129,10 @@ $('#passwordField1').on("keyup", function (e) {
                 $('#password_feedback').html(function () {
                     return `<p class="alert alert-danger">${data.password_error}</p>`;
                 })
+                $('#submit-btn').attr("disabled", "True");
             } else {
                 passwordField.addClass('is-valid');
+                $('#submit-btn').removeAttr("disabled");
             }
         });
     }
@@ -148,8 +155,10 @@ $('#passwordField2').on("keyup", function (e) {
             $('#password2_feedback').html(function () {
                 return `<p class="alert alert-danger">Passwords don't match</p>`;
             }) 
+            $('#submit-btn').attr("disabled", "True");
         } else {
-            $(this).addClass('is-valid') 
+            $(this).addClass('is-valid');
+            $('#submit-btn').removeAttr("disabled");
         }
     } else {
         $('#passwordField1').removeClass('is-valid');

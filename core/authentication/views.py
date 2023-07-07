@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -72,8 +72,42 @@ class RegistrationView(View):
         return render(request, 'authentication/register.html')
     
     def post(self, request):
-        messages.success(request, 'Success')
-        messages.error(request, 'error')
-        messages.info(request, 'info')
-        messages.warning(request, 'Warning')
-        return render(request, 'authentication/register.html')
+        # TODO Get User data
+        # TODO Validate 
+        # TODO Create a user account
+
+        serializer = UserRegistrationSerializer(data=request.POST)
+        
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            email = serializer.validated_data['email']
+            password1 = serializer.validated_data['password1']
+            password2 = serializer.validated_data['password2']
+        
+            
+            context = {
+                'fieldValues': request.POST
+            }
+
+            if not User.objects.filter(username=username).exists():
+                if not User.objects.filter(email=email).exists():
+                    if  password1 != password2:
+                        messages.error(request, 'Passwords do not match')
+                        return render(request, 'authentication/register.html', context)
+                    
+                    if len(password1) < 8:
+                        messages.error(request, "Password is too short")
+                        return render(request, 'authentication/register.html', context)
+                    
+                    user = User.objects.create(username=username,email=email)
+                    user.set_password(password1)
+                    user.save()
+
+                    messages.success(request, "Account succesfully created")
+                    return redirect('register')
+
+            messages.error(request, 'The username / email is already taken')
+            return render(request, 'authentication/register.html')
+
+        messages.error(request, "Invalid data")
+        return render(request, "authentication/register.html")
