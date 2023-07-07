@@ -165,10 +165,3 @@ function isValid(element) {
     } 
     return false; 
 }
-
-$('#registration_form').on('submit', function (event) {
-    if (!(isValid('#usernameField') && isValid('#passwordField1'  && isValid('passwordField2' && isValid('emailField'))))) {
-        return false; 
-    }
-    return true
-})

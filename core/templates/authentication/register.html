@@ -14,8 +14,9 @@
                     <div class="card-title py-3">
                         <h4>Register for a free account</h4>
                     </div>
-                    <form id="registration_form" action="/" method="post" class="d-flex flex-column">
+                    <form id="registration_form" action="{% url 'register' %}" method="post" class="d-flex flex-column">
                         {% csrf_token %}
+                        {% include 'partials/_messages.html' %}
                         <div class="form-group mt-3">
                             <input 
                             type="text" 
