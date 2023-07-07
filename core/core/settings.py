@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'expenses',
     'authentication',
-    'rest_framework'
+    'rest_framework',
+    'validate_email'
 ]
 
 MIDDLEWARE = [
