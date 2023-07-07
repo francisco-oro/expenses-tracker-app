@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import status
 from .serializers import *
 from validate_email import validate_email
+import re
 
 # Create your views here.
 
@@ -40,6 +41,30 @@ class UsernameValidationView(APIView):
             return Response({'username_valid': True}, status=status.HTTP_200_OK)
         return Response(serializer.errors)     
      
+
+class PasswordValidationView(APIView):
+    def post(self, request):
+        serializer = PasswordSerializer(data = request.data)
+
+        if serializer.is_valid():
+            password = serializer.validated_data['password']
+
+            if len(password) < 8:  
+                return Response({"password_error": "password is too short"}, status=status.HTTP_400_BAD_REQUEST)  
+            
+            if not re.search("[a-z]", password):  
+                return Response({"password_error": "Password must include at least 2 lowercase and capital letters"}, status=status.HTTP_400_BAD_REQUEST)  
+            
+            if not re.search("[A-Z]", password):  
+                return Response({"password_error": "Password must include at least 2 lowercase and capital letters"}, status=status.HTTP_400_BAD_REQUEST)  
+            
+            if not re.search("[0-9]", password):  
+                return Response({"password_error": "Password must include at least 1 number"}, status=status.HTTP_400_BAD_REQUEST)    
+            
+            return Response({'password_valid': True}, status=status.HTTP_200_OK)
+
+        return Response({"password_error":"invalid"}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class RegistrationView(View):
     def get(self, request):

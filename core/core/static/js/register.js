@@ -1,7 +1,25 @@
 const usernameField = document.querySelector("#usernameField");
 const feedBackArea = document.querySelector(".invalid_feeedback");
 
-// No Jquery
+const handleToggleInput = (e) => {
+    if ($('.showPasswordToggle').text() === "Show") {
+        $('.showPasswordToggle').text(function () {
+            $('.password').attr("type", "text");
+            return "Hide";
+        })
+    } else {
+        $('.showPasswordToggle').text(function () {
+            $('.password').attr("type", "password");
+            return "Show";
+        })
+    }
+}
+
+// Functionalities - Password show
+$('.showPasswordToggle').on("click", handleToggleInput)
+
+
+// No Jquery - username validation
 usernameField.addEventListener("keyup", (e) => {
     console.log(777); 
     const usernameVal = e.target.value;
@@ -42,7 +60,7 @@ usernameField.addEventListener("keyup", (e) => {
     
 })
 
-// JQuery 
+// JQuery - Email validation 
 $('#emailField').on("keyup", function (e) {
     console.log($(this).val())
 
@@ -76,4 +94,81 @@ $('#emailField').on("keyup", function (e) {
         $('#emailField').removeClass('is-valid');
         $('#emailField').addClass('is-invalid');
     }
+})
+
+// JQuery - password validation
+
+$('#passwordField1').on("keyup", function (e) {
+    console.log($(this).val())
+
+    const password = $(this).val();
+    const passwordField = $(this); // Store the reference to $(this) in a variable
+
+    passwordField.removeClass('is-invalid'); 
+    $('#password_feedback').addClass('d-none');
+
+    if (password.length > 0 ) {
+        fetch("/auth/validate-password/", {
+            body: JSON.stringify({ password : password}),
+            method: "POST", 
+            headers:{
+                "Content-Type": "application/json"
+            }, 
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("data", data.password_error);
+            if(data.password_error){
+                passwordField.addClass('is-invalid');
+                $('#password_feedback').removeClass('d-none');
+                $('#password_feedback').html(function () {
+                    return `<p class="alert alert-danger">${data.password_error}</p>`;
+                })
+            } else {
+                passwordField.addClass('is-valid');
+            }
+        });
+    }
+})
+
+
+$('#passwordField2').on("keyup", function (e) {
+
+    const password2 = $(this).val();
+    const password1 = $('#passwordField1').val();
+
+    $(this).removeClass('is-invalid'); 
+    $('#password2_feedback').addClass('d-none');
+
+
+    if (password2.length > 0) {
+        if (password2 != password1) {
+            $(this).addClass('is-invalid');
+            $('#password2_feedback').removeClass('d-none');
+            $('#password2_feedback').html(function () {
+                return `<p class="alert alert-danger">Passwords don't match</p>`;
+            }) 
+        } else {
+            $(this).addClass('is-valid') 
+        }
+    } else {
+        $('#passwordField1').removeClass('is-valid');
+        $('#passwordField1').addClass('is-invalid');
+    }
+})
+
+// Form overall validation 
+
+function isValid(element) {
+    if($(element).hasClass('is-valid')){
+        return true;
+    } 
+    return false; 
+}
+
+$('#registration_form').on('submit', function (event) {
+    if (!(isValid('#usernameField') && isValid('#passwordField1'  && isValid('passwordField2' && isValid('emailField'))))) {
+        return false; 
+    }
+    return true
 })

@@ -14,7 +14,7 @@
                     <div class="card-title py-3">
                         <h4>Register for a free account</h4>
                     </div>
-                    <form action="" method="post" class="d-flex flex-column">
+                    <form id="registration_form" action="/" method="post" class="d-flex flex-column">
                         {% csrf_token %}
                         <div class="form-group mt-3">
                             <input 
@@ -41,32 +41,33 @@
                             />
                         </div>
                         <div class="d-none" id="email_feedback"></div>
-    
+
                         <div class="form-group mt-3">
                             <input 
                             type="password" 
-                            name="password"
+                            name="password1"
                             id="passwordField1"
                             placeholder="password"
-                            class="form-control form-control-snm"
+                            class="form-control form-control-snm password"
                             />
                             <div class="d-flex justify-content-end">
-                                <small class=""">Show</small>
+                                <small class="showPasswordToggle">Show</small>
                             </div>
-                            
                         </div>
-    
+                        <div class="d-none" id="password_feedback"></div>
+                        
     
                         <div class="form-group mt-3 ">
                             <input 
                             type="password" 
-                            name="password1"
+                            name="password2"
                             id="passwordField2"
                             placeholder="Password confirmation"
-                            class="form-control form-control-snm"
+                            class="form-control form-control-snm password"
                             />
                         </div>
-    
+                        <div class="d-none" id="password2_feedback"></div>  
+
                         <input type="submit" value="Register" class=" mt-3 btn btn-block mx-auto btn-primary"/>
                     </form>
                 </div>
