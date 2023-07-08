@@ -5,14 +5,17 @@ certifi==2023.5.7
 charset-normalizer==3.1.0
 Django==4.2.3
 django-storages==1.13.2
+djangorestframework==3.14.0
 gunicorn==20.1.0
 idna==3.4
 jmespath==1.0.1
 psycopg2-binary==2.9.6
 python-dateutil==2.8.2
 python-dotenv==1.0.0
+pytz==2023.3
 requests==2.31.0
 s3transfer==0.6.1
 six==1.16.0
 sqlparse==0.4.4
 urllib3==1.26.16
+validate-email==1.3
