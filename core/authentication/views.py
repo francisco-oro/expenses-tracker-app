@@ -127,11 +127,26 @@ class RegistrationView(View):
 
                     activate_url = 'http://'+domain+link
 
-                    email_subject = "Activate your account for Rumi Press"
-                    email_body = f"""Hi, {username}. 
-                        Please use this link to verify your Rumi Press Account : {activate_url}
-                        Thanks for using our service, 
-                        Francisco"""
+                    email_subject = "Email Verification Required for Your Account | Rumi Press"
+                    email_body = f"""Thank you for signing up with our service! We're excited to have you on board. Before you can start using your account, we need to verify your email address. 
+ 
+                        To complete the verification process, please click on the following link: 
+                        
+                        {activate_url}
+                        
+                        By verifying your email, you will gain full access to all the features and benefits our platform offers. It will also help us ensure the security and integrity of your account. 
+                        
+                        If you did not sign up for an account with us, please disregard this email. Your account will not be activated unless you verify your email address. 
+                        
+                        If you have any questions or need assistance, please don't hesitate to reach out to our support team at [Support Email]. 
+                        
+                        Thank you for choosing our service! 
+                        
+                        Best regards, 
+                        Francisco Oro  
+                        The Rumi Press Website"""
+                    
+
                     email = EmailMessage(
                         email_subject,
                         email_body,
@@ -141,7 +156,9 @@ class RegistrationView(View):
 
                     email.send(fail_silently=False)
                     messages.success(request, "Account succesfully created")
-                    return redirect('register')
+                    messages.info(request, "A verification link has been sent to the email address you provided, please activate your account")
+
+                    return redirect('login')
 
             messages.error(request, 'The username / email is already taken')
             return render(request, 'authentication/register.html')
@@ -152,4 +169,29 @@ class RegistrationView(View):
 
 class VerificationView(View):
     def get(self, request, uidb64, token):
-        return redirect('login')
+
+        try:
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=id)
+            
+            if not token_generator.check_token(user=user, token=token):
+                messages.success('User has been already activated')
+                return redirect('login')
+
+            if user.is_active:
+                messages.success('User has been already activated')
+                return redirect('login')
+
+            user.is_active = True
+            user.save()
+
+            messages.success(request, "Account activated successfully")
+            return redirect('login')
+        except Exception as e:
+            pass
+
+        return render(request, 'authentication/login.html')
+    
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'authentication/login.html')
