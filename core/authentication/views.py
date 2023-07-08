@@ -2,12 +2,21 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.mail import EmailMessage
+
+from django.utils.encoding import force_bytes,force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import status
 from .serializers import *
+from .utils import token_generator
 from validate_email import validate_email
 import re
+
 
 # Create your views here.
 
@@ -101,8 +110,36 @@ class RegistrationView(View):
                     
                     user = User.objects.create(username=username,email=email)
                     user.set_password(password1)
+                    user.is_active = False
+
                     user.save()
 
+                    # Path to view
+                    # - Getting the domain we are on
+                    # - relative url verification
+                    # - encode uid
+                    # - token
+                    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+                    # Construct the domain
+                    domain = get_current_site(request).domain
+                    link = reverse('activate', kwargs={'uidb64':uidb64, 'token':token_generator.make_token(user)})
+
+                    activate_url = 'http://'+domain+link
+
+                    email_subject = "Activate your account for Rumi Press"
+                    email_body = f"""Hi, {username}. 
+                        Please use this link to verify your Rumi Press Account : {activate_url}
+                        Thanks for using our service, 
+                        Francisco"""
+                    email = EmailMessage(
+                        email_subject,
+                        email_body,
+                        'noreply@semycolon.com',
+                        [email],
+                    )
+
+                    email.send(fail_silently=False)
                     messages.success(request, "Account succesfully created")
                     return redirect('register')
 
@@ -111,3 +148,8 @@ class RegistrationView(View):
 
         messages.error(request, "Invalid data")
         return render(request, "authentication/register.html")
+    
+
+class VerificationView(View):
+    def get(self, request, uidb64, token):
+        return redirect('login')
