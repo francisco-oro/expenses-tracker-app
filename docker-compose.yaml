@@ -14,8 +14,8 @@ services:
   #   ports:
   #     - "8001:8020"
   #   command: sh -c "chmod +x /app/migrate.sh && sh /app/migrate.sh && /app/entrypoint.sh"
-  #   volumes:
-  #     - staticfiles:/app/static/
+    # volumes:
+    #   - staticfiles:/app/core/static/
   postgres_db:
     restart: always
     image: postgres
@@ -28,7 +28,7 @@ services:
       - "5342:5342"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-# volumes:
+volumes:
 #   staticfiles:
 #     external: true
-#   postgres_data:
+  postgres_data:
