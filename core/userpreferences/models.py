@@ -9,3 +9,6 @@ class UserPreferences(models.Model):
 
     def __str__(self) -> str:
         return str(self.user)+'s'+'preferences'
+    
+    class Meta:
+        verbose_name_plural = "User preferences"
