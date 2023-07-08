@@ -8,6 +8,7 @@ from django.utils.encoding import force_bytes,force_str, DjangoUnicodeDecodeErro
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -195,3 +196,34 @@ class VerificationView(View):
 class LoginView(View):
     def get(self, request):
         return render(request, 'authentication/login.html')
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+
+        if username and password:
+
+            user = authenticate(username=username, password=password)
+
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    messages.success(request, f"Welcome, {user.username}, you are now logged in")
+        
+                    return redirect('expenses')
+                
+                messages.error(request, "Account is not active, please check your email")
+                return render(request, 'authentication/login.html')
+            
+            messages.error(request, 'Invalid credentials, please try again')
+            return render(request, 'authentication/login.html')
+        
+        messages.error(request, 'Please fill all fields')
+        return render(request, 'authentication/login.html')
+    
+
+class LogoutView(View):
+    def post(self, request):
+        logout(request)
+        messages.success(request, "You have been logged out")
+        return redirect('login')
