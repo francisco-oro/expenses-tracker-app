@@ -1,3 +1,5 @@
+from collections.abc import Callable, Iterable, Mapping
+from typing import Any
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
@@ -17,6 +19,8 @@ from .serializers import *
 from .utils import token_generator
 from validate_email import validate_email
 import re
+
+import threading
 
 
 # Create your views here.
@@ -155,7 +159,7 @@ class RegistrationView(View):
                         [email],
                     )
 
-                    email.send(fail_silently=False)
+                    EmailThreading(email).start()
                     messages.success(request, "Account succesfully created")
                     messages.info(request, "A verification link has been sent to the email address you provided, please activate your account")
 
@@ -294,7 +298,7 @@ class RequestPasswordResetEmail(View):
                 [email]
             )
             
-            email.send(fail_silently=False)
+            EmailThreading(email).start()
 
             messages.success(request, 'We have sent you an email to reset your password')
 
@@ -358,5 +362,10 @@ class CompletePasswordResetView(View):
 
 
 
+class EmailThreading(threading.Thread):
 
-
+    def __init__(self, email) -> None:
+        self.email = email
+        threading.Thread.__init__(self)
+    def run(self):
+        self.email.send(fail_silently=True)
