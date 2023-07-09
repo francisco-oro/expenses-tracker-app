@@ -46,6 +46,10 @@
                         
                         <input type="submit" id="submit-btn" value="Login" class=" mt-3 btn btn-block mx-auto btn-primary"/>
                     </form>
+                    <div class="container">
+                        <span class="text-lead lead">Don't have an account? <a href="{% url 'register' %}">Sign up</a> </span><br/>
+                        <span class="text-lead lead">Forgot password? <a href="{% url 'reset-password' %}">Reset my password</a> </span>
+                    </div>
                 </div>
             </div>
         </div>
