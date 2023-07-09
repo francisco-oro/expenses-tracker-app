@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from .models import *
 from .serializers import *
 import json
+from userpreferences.models import UserPreferences
 # Create your views here.
 
 def search_expenses(request):
@@ -32,10 +34,20 @@ def index(request):
     page_number = request.GET.get('page')
 
     page_obj = paginator.get_page(page_number)
+    
+    # User customized settings 
+
+    try:
+        currency = UserPreferences.objects.get(user=request.user).currency
+    except ObjectDoesNotExist:
+         messages.info(request, "Please take a moment to set your preferences at the account section")
+         return redirect('preferences')
+
 
     context = {
           'expenses': expenses,
           "page_obj": page_obj,
+          "currency": currency,
     }
 
     return render(request, 'expenses/index.html', context)
