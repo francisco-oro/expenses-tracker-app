@@ -52,6 +52,7 @@ def index(request):
 
     return render(request, 'expenses/index.html', context)
 
+@login_required(login_url='/auth/login/')
 def addExpense(request):
 
     categories = Category.objects.all()
@@ -92,7 +93,7 @@ def addExpense(request):
         messages.success(request, "Record inserted successfully")
         return redirect('expenses')
     
-
+@login_required(login_url='/auth/login/')
 def expense_edit(request, id):
      expense = Expense.objects.get(pk=id)
      categories = Category.objects.all()
@@ -144,7 +145,7 @@ def expense_edit(request, id):
         messages.success(request, "Record updated successfully")
         return redirect('expenses')
      
-
+@login_required(login_url='/auth/login/')
 def delete_expense(request, id):
      expense = Expense.objects.get(pk=id)
      if request.user == expense.owner: 

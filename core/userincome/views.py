@@ -50,7 +50,7 @@ def index(request):
     }
     return render(request, 'income/index.html', context)
 
-
+@login_required(login_url='/auth/login/')
 def add_income(request):
     sources = Source.objects.all()
     context = {
@@ -90,7 +90,7 @@ def add_income(request):
         messages.success(request, "Record inserted successfully")
         return redirect('income')
     
-
+@login_required(login_url='/auth/login/')
 def income_edit(request, id):
      income = UserIncome.objects.get(pk=id)
      sources = Source.objects.all()
@@ -142,7 +142,7 @@ def income_edit(request, id):
         messages.success(request, "Record updated successfully")
         return redirect('income')
      
-
+@login_required(login_url='/auth/login/')
 def delete_income(request, id):
      income = UserIncome.objects.get(pk=id)
      if request.user == income.owner: 
