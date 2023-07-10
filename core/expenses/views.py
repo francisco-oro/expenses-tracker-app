@@ -8,6 +8,7 @@ from .models import *
 from .serializers import *
 import json
 from userpreferences.models import UserPreferences
+import datetime
 # Create your views here.
 
 def search_expenses(request):
@@ -156,3 +157,57 @@ def delete_expense(request, id):
         
      messages.error(request, "Cannot delete that record")
      return redirect('expenses')
+
+def expense_category_summary(request, opt):
+
+     today = datetime.date.today()
+
+     if opt == 1:
+        one_week_ago = today - datetime.timedelta(days=7)
+        start_from = one_week_ago
+
+     elif opt == 2:
+        one_month_ago = today - datetime.timedelta(days=30)
+        start_from = one_month_ago
+
+     elif opt == 3:
+        four_months_ago = today - datetime.timedelta(days=30*4)
+        start_from = four_months_ago
+     
+     elif opt == 4:
+        six_months_ago = today - datetime.timedelta(days=30*6)
+        start_from = six_months_ago
+     
+     elif opt == 5:
+        one_year_ago = today - datetime.timedelta(days=365)
+        start_from = one_year_ago
+     else:
+         return JsonResponse({"error", "Invalid option key"}, safe=False)
+
+
+     expenses = Expense.objects.filter(date__gte = start_from, date__lte = today, owner=request.user)
+     
+     expenses_summary = {}
+
+     def get_category(expense):
+          return expense.category
+    
+     def get_expense_category_amount(expense):
+          amount = 0
+          
+          filtered_by_category = Expense.objects.filter(category=category)
+          for item in filtered_by_category:
+               amount += item.amount
+          return amount
+
+
+     category_list = list(set(map(get_category, expenses)))
+
+     for expense in expenses:
+        for category in category_list:
+             expenses_summary[category] = get_expense_category_amount(category)
+
+     return JsonResponse(expenses_summary, safe=False)
+
+def stats_view(request):
+     return render(request, 'expenses/stats.html')

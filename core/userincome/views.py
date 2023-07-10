@@ -8,6 +8,7 @@ from .models import *
 import json
 from userpreferences.models import UserPreferences
 # Create your views here.
+import datetime
 
 def search_income(request):
      if request.method == 'POST':
@@ -153,3 +154,57 @@ def delete_income(request, id):
         
      messages.error(request, "Cannot delete that record")
      return redirect('income')
+
+def income_source_summary(request, opt):
+
+     today = datetime.date.today()
+
+     if opt == 1:
+        one_week_ago = today - datetime.timedelta(days=7)
+        start_from = one_week_ago
+
+     elif opt == 2:
+        one_month_ago = today - datetime.timedelta(days=30)
+        start_from = one_month_ago
+
+     elif opt == 3:
+        four_months_ago = today - datetime.timedelta(days=30*4)
+        start_from = four_months_ago
+     
+     elif opt == 4:
+        six_months_ago = today - datetime.timedelta(days=30*6)
+        start_from = six_months_ago
+     
+     elif opt == 5:
+        one_year_ago = today - datetime.timedelta(days=365)
+        start_from = one_year_ago
+     else:
+         return JsonResponse({"error", "Invalid option key"}, safe=False)
+
+
+     income = UserIncome.objects.filter(date__gte = start_from, date__lte = today, owner=request.user)
+     
+     income_summary = {}
+
+     def get_source(income):
+          return income.source
+    
+     def get_income_source_amount(income):
+          amount = 0
+          
+          filtered_by_source = UserIncome.objects.filter(source=source)
+          for item in filtered_by_source:
+               amount += item.amount
+          return amount
+
+
+     source_list = list(set(map(get_source, income)))
+
+     for item in income:
+        for source in source_list:
+             income_summary[source] = get_income_source_amount(source)
+
+     return JsonResponse(income_summary, safe=False)
+
+def stats_view(request):
+     return render(request, 'income/stats.html')

@@ -44,13 +44,13 @@
         </h6>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="#">
-                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'stats' %}">
+                <svg class="bi"><use xlink:href="{% url 'stats' %}"/></svg>
                 Expenses summary 
             </a>
             </li>
             <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="#">
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'income-stats' %}">
                 <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
                 Income summary
             </a>
