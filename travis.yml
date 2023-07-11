@@ -1,0 +1,12 @@
+language:python
+
+python:
+  - "3.11"
+env:
+    - SECRET_KEY = "TEST"
+services:
+  - postgresql
+install:
+  - pip install -r core/requirements.txt
+script:
+  - python core/manage.py test
