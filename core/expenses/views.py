@@ -6,7 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum
 from django.template.loader import render_to_string
-from rest_framework import status
+from rest_framework import status, generics, viewsets, permissions
+from rest_framework.decorators import api_view, authentication_classes
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -38,9 +39,10 @@ def search_expenses(request):
         
         return JsonResponse(list(data), safe=False)
 
-
+@authentication_classes(permissions.IsAuthenticated)
 @login_required(login_url='/auth/login/')
 def index(request):
+    
     categories = Category.objects.all()
     expenses = Expense.objects.filter(owner=request.user)
 
@@ -107,6 +109,7 @@ def addExpense(request):
         messages.success(request, "Record inserted successfully")
         return redirect('expenses')
     
+@authentication_classes(permissions.IsAuthenticated)
 @login_required(login_url='/auth/login/')
 def expense_edit(request, id):
      expense = Expense.objects.get(pk=id)
@@ -158,7 +161,9 @@ def expense_edit(request, id):
          
         messages.success(request, "Record updated successfully")
         return redirect('expenses')
-     
+
+
+@authentication_classes(permissions.IsAuthenticated)
 @login_required(login_url='/auth/login/')
 def delete_expense(request, id):
      expense = Expense.objects.get(pk=id)
@@ -200,11 +205,14 @@ def expense_category_summary(request, opt):
 
      return JsonResponse(expenses_summary, safe=False)
 
+
+@authentication_classes(permissions.IsAuthenticated)
 @login_required(login_url='/auth/login/')
 def stats_view(request):
      return render(request, 'expenses/stats.html')
 
 
+@authentication_classes(permissions.IsAuthenticated)
 def timeline_expenses_tracker(request, opt):
     try:
         calendar = []
@@ -253,10 +261,13 @@ def timeline_expenses_tracker(request, opt):
         return HttpResponse('You must provide a valid days count', status.HTTP_400_BAD_REQUEST)
     
     
+@authentication_classes(permissions.IsAuthenticated)
 @login_required(login_url='/auth/login/')
 def dashboard_view(request):
     return render(request, 'dashboard/stats.html')
 
+
+@authentication_classes(permissions.IsAuthenticated)
 def export_csv(request, opt):
     today = datetime.datetime.today()
     start_from = today - datetime.timedelta(days=opt)
@@ -274,6 +285,7 @@ def export_csv(request, opt):
     return response
 
 
+@authentication_classes(permissions.IsAuthenticated)
 def export_xlx(request, opt):
     today = datetime.datetime.today()
     start_from = today - datetime.timedelta(days=opt)
@@ -303,6 +315,8 @@ def export_xlx(request, opt):
     
     return response
 
+
+@authentication_classes(permissions.IsAuthenticated)
 def export_pdf(request, opt):
     today = datetime.datetime.today()
     start_from = today - datetime.timedelta(days=opt)
