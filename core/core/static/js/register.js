@@ -63,6 +63,7 @@ usernameField.addEventListener("keyup", (e) => {
     
 })
 
+
 // JQuery - Email validation 
 $('#emailField').on("keyup", function (e) {
     console.log($(this).val())
@@ -101,40 +102,31 @@ $('#emailField').on("keyup", function (e) {
     }
 })
 
-// JQuery - password validation
 
+// Password validation 1: Short passwods
 $('#passwordField1').on("keyup", function (e) {
-    console.log($(this).val())
 
     const password = $(this).val();
-    const passwordField = $(this); // Store the reference to $(this) in a variable
 
-    passwordField.removeClass('is-invalid'); 
-    $('#password_feedback').addClass('d-none');
+    $(this).removeClass('is-invalid'); 
+    $('#password1_feedback').addClass('d-none');
 
-    if (password.length > 0 ) {
-        fetch("/auth/validate-password/", {
-            body: JSON.stringify({ password : password}),
-            method: "POST", 
-            headers:{
-                "Content-Type": "application/json"
-            }, 
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log("data", data.password_error);
-            if(data.password_error){
-                passwordField.addClass('is-invalid');
-                $('#password_feedback').removeClass('d-none');
-                $('#password_feedback').html(function () {
-                    return `<p class="alert alert-danger">${data.password_error}</p>`;
-                })
-                $('#submit-btn').attr("disabled", "True");
-            } else {
-                passwordField.addClass('is-valid');
-                $('#submit-btn').removeAttr("disabled");
-            }
-        });
+
+    if (password.length > 0) {
+        if (password.length < 8) {
+            $(this).addClass('is-invalid');
+            $('#password1_feedback').removeClass('d-none');
+            $('#password1_feedback').html(function () {
+                return `<p class="alert alert-danger">Password is too short. Make sure to use at least 8 characters</p>`;
+            }) 
+            $('#submit-btn').attr("disabled", "True");
+        } else {
+            $(this).addClass('is-valid');
+            $('#submit-btn').removeAttr("disabled");
+        }
+    } else {
+        $('#passwordField1').removeClass('is-valid');
+        $('#passwordField1').addClass('is-invalid');
     }
 })
 
@@ -165,12 +157,3 @@ $('#passwordField2').on("keyup", function (e) {
         $('#passwordField1').addClass('is-invalid');
     }
 })
-
-// Form overall validation 
-
-function isValid(element) {
-    if($(element).hasClass('is-valid')){
-        return true;
-    } 
-    return false; 
-}
