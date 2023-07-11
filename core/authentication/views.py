@@ -38,7 +38,7 @@ class EmailValidationView(APIView):
             if User.objects.filter(email=email).exists():
                 return Response({"email_error":"Sorry, email is already in use"}, status=status.HTTP_409_CONFLICT)
 
-            return Response({"email_valid": True})
+            return Response({"email_valid": True}, status=status.HTTP_200_OK)
         
         return Response({"email_error":"Email is invalid"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,32 +57,8 @@ class UsernameValidationView(APIView):
                 return Response({"username_error":"username is already taken"}, status=status.HTTP_409_CONFLICT)
 
             return Response({'username_valid': True}, status=status.HTTP_200_OK)
-        return Response(serializer.errors)     
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)     
      
-
-class PasswordValidationView(APIView):
-    authentication_classes = AllowAny
-    def post(self, request):
-        serializer = PasswordSerializer(data = request.data)
-
-        if serializer.is_valid():
-            password = serializer.validated_data['password']
-
-            if len(password) < 8:  
-                return Response({"password_error": "password is too short"}, status=status.HTTP_400_BAD_REQUEST)  
-            
-            if not re.search("[a-z]", password):  
-                return Response({"password_error": "Password must include at least 2 lowercase and capital letters"}, status=status.HTTP_400_BAD_REQUEST)  
-            
-            if not re.search("[A-Z]", password):  
-                return Response({"password_error": "Password must include at least 2 lowercase and capital letters"}, status=status.HTTP_400_BAD_REQUEST)  
-            
-            if not re.search("[0-9]", password):  
-                return Response({"password_error": "Password must include at least 1 number"}, status=status.HTTP_400_BAD_REQUEST)    
-            
-            return Response({'password_valid': True}, status=status.HTTP_200_OK)
-
-        return Response({"password_error":"invalid"}, status=status.HTTP_400_BAD_REQUEST)
     
 class RegistrationView(View):
     authentication_classes = AllowAny
@@ -111,11 +87,11 @@ class RegistrationView(View):
                 if not User.objects.filter(email=email).exists():
                     if  password1 != password2:
                         messages.error(request, 'Passwords do not match')
-                        return render(request, 'authentication/register.html', context)
+                        return render(request, 'authentication/register.html', context, status=status.HTTP_400_BAD_REQUEST)
                     
                     if len(password1) < 8:
                         messages.error(request, "Password is too short")
-                        return render(request, 'authentication/register.html', context)
+                        return render(request, 'authentication/register.html', context, status=status.HTTP_400_BAD_REQUEST)
                     
                     user = User.objects.create(username=username,email=email)
                     user.set_password(password1)
@@ -169,11 +145,11 @@ class RegistrationView(View):
 
                     return redirect('login')
 
-            messages.error(request, 'The username / email is already taken')
-            return render(request, 'authentication/register.html')
+            messages.error(request, 'The provided username / email is already taken')
+            return render(request, 'authentication/register.html', context, status=status.HTTP_409_CONFLICT)
 
         messages.error(request, "Invalid data")
-        return render(request, "authentication/register.html")
+        return render(request, "authentication/register.html", status=status.HTTP_400_BAD_REQUEST)
     
 
 class VerificationView(View):
@@ -222,13 +198,13 @@ class LoginView(View):
                     return redirect('expenses')
                 
                 messages.error(request, "Account is not active, please check your email")
-                return render(request, 'authentication/login.html')
+                return render(request, 'authentication/login.html', status=status.HTTP_401_UNAUTHORIZED)
             
             messages.error(request, 'Invalid credentials, please try again')
-            return render(request, 'authentication/login.html')
+            return render(request, 'authentication/login.html', status=status.HTTP_401_UNAUTHORIZED)
         
         messages.error(request, 'Please fill all fields')
-        return render(request, 'authentication/login.html')
+        return render(request, 'authentication/login.html', status=status.HTTP_401_UNAUTHORIZED)
     
 class LogoutView(View):
     def post(self, request):
