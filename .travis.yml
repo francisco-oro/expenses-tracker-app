@@ -1,12 +1,14 @@
-language:python
+language: python
 
 python:
-  - "3.11"
+    - "3.11"
 env:
-    - SECRET_KEY = "TEST"
+    - SECRET_KEY='TEST'
 services:
-  - postgresql
+   - postgresql
 install:
-  - pip install -r core/requirements.txt
+    - pip install core/requirements.txt
+
 script:
-  - python core/manage.py test
+    -  python core/manage.py test
+after_success:
