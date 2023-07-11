@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path("", views.index, name="expenses"),
+    path("", login_required(views.index), name="expenses"),
     path("add/",views.addExpense, name="add-expenses"),
     path("edit/<int:id>/", views.expense_edit, name="expense-edit"), 
     path("delete/<int:id>/", views.delete_expense, name="expense-delete"),

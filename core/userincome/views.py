@@ -243,7 +243,7 @@ def timeline_income_tracker(request, opt):
     except Exception:
         return HttpResponse('You must provide a valid days count', status.HTTP_400_BAD_REQUEST)
 
-
+@login_required(login_url='/auth/login/')
 def stats_view(request):
      return render(request, 'income/stats.html')
 

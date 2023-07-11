@@ -15,6 +15,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import status
+from rest_framework.decorators import authentication_classes, api_view
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import *
 from .utils import token_generator
 from validate_email import validate_email
@@ -23,9 +25,10 @@ import re
 import threading
 
 
-# Create your views here.
+
 
 class EmailValidationView(APIView):
+    authentication_classes = AllowAny
     def post(self, request):
         serializer = EmailSerializer(data = request.data)
 
@@ -40,8 +43,8 @@ class EmailValidationView(APIView):
         return Response({"email_error":"Email is invalid"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class UsernameValidationView(APIView):
+    authentication_classes = AllowAny
     def post(self, request):
         serializer = UsernameSerializer(data = request.data)
         if serializer.is_valid():
@@ -58,6 +61,7 @@ class UsernameValidationView(APIView):
      
 
 class PasswordValidationView(APIView):
+    authentication_classes = AllowAny
     def post(self, request):
         serializer = PasswordSerializer(data = request.data)
 
@@ -80,8 +84,8 @@ class PasswordValidationView(APIView):
 
         return Response({"password_error":"invalid"}, status=status.HTTP_400_BAD_REQUEST)
     
-
 class RegistrationView(View):
+    authentication_classes = AllowAny
     def get(self, request):
         return render(request, 'authentication/register.html')
     
@@ -173,6 +177,7 @@ class RegistrationView(View):
     
 
 class VerificationView(View):
+    authentication_classes = AllowAny
     def get(self, request, uidb64, token):
 
         try:
@@ -225,14 +230,12 @@ class LoginView(View):
         messages.error(request, 'Please fill all fields')
         return render(request, 'authentication/login.html')
     
-
 class LogoutView(View):
     def post(self, request):
         logout(request)
         messages.success(request, "You have been logged out")
         return redirect('login')
     
-
 class RequestPasswordResetEmail(View):
     def get(self, request):
         return render(request, 'authentication/reset-password.html')
