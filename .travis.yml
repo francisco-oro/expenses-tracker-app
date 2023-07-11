@@ -10,6 +10,6 @@ install:
     - pip install -r core/requirements.txt
 
 script:
-    -  coverage run --source='authentication' core/manage.py test && coverage report && coverage html
+    -  coverage run core/manage.py test core/authentication && coverage report && coverage html
 after_success:
     - codecov
