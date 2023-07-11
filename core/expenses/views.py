@@ -200,6 +200,7 @@ def expense_category_summary(request, opt):
 
      return JsonResponse(expenses_summary, safe=False)
 
+@login_required(login_url='/auth/login/')
 def stats_view(request):
      return render(request, 'expenses/stats.html')
 
@@ -252,7 +253,7 @@ def timeline_expenses_tracker(request, opt):
         return HttpResponse('You must provide a valid days count', status.HTTP_400_BAD_REQUEST)
     
     
-
+@login_required(login_url='/auth/login/')
 def dashboard_view(request):
     return render(request, 'dashboard/stats.html')
 
