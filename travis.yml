@@ -1,4 +1,4 @@
-language:pyhon
+language:python
 
 python:
   - "3.11"
