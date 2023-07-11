@@ -7,7 +7,7 @@ env:
 services:
    - postgresql
 install:
-    - pip install core/requirements.txt
+    - pip install -r core/requirements.txt
 
 script:
     -  python core/manage.py test
