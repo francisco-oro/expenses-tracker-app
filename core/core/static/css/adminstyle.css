@@ -1,0 +1,70 @@
+:root{
+    /* CSS HEX */
+    --tea-green: #C9EFC7ff;
+    --cambridge-blue: #98B097ff;
+    --celadon: #ACC9AAff;
+    --ebony: #656F65ff;
+    --tea-green-2: #C9EFC7ff;
+    /* CSS HSL */
+    --tea-green: hsla(117, 56%, 86%, 1);
+    --cambridge-blue: hsla(118, 14%, 64%, 1);
+    --celadon: hsla(116, 22%, 73%, 1);
+    --ebony: hsla(120, 5%, 42%, 1);
+    --tea-green-2: hsla(117, 56%, 86%, 1);
+    /* Gradients */
+    --gradient-top: linear-gradient(0deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-right: linear-gradient(90deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-bottom: linear-gradient(180deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-left: linear-gradient(270deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-top-right: linear-gradient(45deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-bottom-right: linear-gradient(135deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-top-left: linear-gradient(225deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-bottom-left: linear-gradient(315deg, #C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+    --gradient-radial: radial-gradient(#C9EFC7ff, #98B097ff, #ACC9AAff, #656F65ff, #C9EFC7ff);
+
+}
+
+#header {
+    background: var(--cambridge-blue);
+    opacity: 1;
+    color: darkblue;
+}
+
+#head {
+    color: darkblue !important;
+}
+
+div.breadcrumbs {
+    background: var(--ebony); 
+    padding: 10px 40px;
+    border: none;
+    color: var(--breadcrumbs-fg);
+    text-align: left;
+}
+
+.login .submitrow{
+    padding: 0px !important;
+}
+
+
+input[type="subimt"],
+input[type="button"],
+.submit-row input,
+a.button {
+    width: 100%;
+    background: var(--cambridge-blue);
+}
+
+.module h2, .module caption, .inline-group h2 {
+    margin: 0;
+    padding: 8px;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    text-align: left;
+    background: var(--cambridge-blue);
+    color: var(--ebony);
+}
+
+#header a:link, #header a:visited, #logout-form button {
+    color: darkblue;
+}

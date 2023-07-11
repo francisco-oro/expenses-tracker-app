@@ -1,19 +1,19 @@
 version: '3.9'
 services:
-  # core:
-  #   depends_on:
-  #     - postgres_db
-  #   build: 
-  #     context: ./core
-  #     dockerfile: Dockerfile
-  #   image: rumi-press:v1
-  #   environment:
-  #     - PORT=8020
-  #   env_file:
-  #     - core/core/.env
-  #   ports:
-  #     - "8001:8020"
-  #   command: sh -c "chmod +x /app/migrate.sh && sh /app/migrate.sh && /app/entrypoint.sh"
+  core:
+    depends_on:
+      - postgres_db
+    build: 
+      context: ./core
+      dockerfile: Dockerfile
+    image: rumi-press:v1
+    environment:
+      - PORT=8020
+    env_file:
+      - core/core/.env
+    ports:
+      - "8001:8020"
+    command: sh -c "chmod +x /app/migrate.sh && sh /app/migrate.sh && /app/entrypoint.sh"
     # volumes:
     #   - staticfiles:/app/core/static/
   postgres_db:

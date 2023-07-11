@@ -7,69 +7,64 @@
         <div class="col-md-10">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="">Expenses</a></li>
-                <li class="breadcrumb-item active" aria-current="page">My Expenses</li>
+                <li class="breadcrumb-item"><a href="{% url 'income' %}">Income</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Income</li>
                 </ol>
             </nav>
         </div>
 
         <div class="col-md-2">
-            <a href="{% url 'add-expenses' %}" class="btn btn-primary">Add a new expense</a>
+            <a href="{% url 'add-income' %}" class="btn btn-primary">Add a new income</a>
         </div>
     </div> 
-
-    <div class="container mt-4">
-
-        {% if expenses.count %}
+   
+     <div class="container mt-4">
+        {% if income.count %}
             <div class="row">
                 <div class="col-md-8">
-
-
-                </div>
-                <div class="col-md-10 d-flex justify-content-between">  
                     <div class="col-md-8 d-flex flex-wrap">
-                        <div class="dropdown m-2">
+                        <div class="dropdown ms-4">
                             <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                               Export as CSV
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a href="{% url 'expenses-export-csv' 7 %}" class="dropdown-item">Last week</a></li>
-                              <li><a href="{% url 'expenses-export-csv' 30 %}"  class="dropdown-item">Last month</a></li>
-                              <li><a href="{% url 'expenses-export-csv' 120 %}" class="dropdown-item">Last 4 months</a></li>
-                              <li><a href="{% url 'expenses-export-csv' 182 %}" class="dropdown-item">Last 6 months</a></li>
-                              <li><a href="{% url 'expenses-export-csv' 365 %}" class="dropdown-item">Last year</a></li>
+                                <li><a href="{% url 'income-export-csv' 7 %}" class="dropdown-item">Last week</a></li>
+                              <li><a href="{% url 'income-export-csv' 30 %}"  class="dropdown-item">Last month</a></li>
+                              <li><a href="{% url 'income-export-csv' 120 %}" class="dropdown-item">Last 4 months</a></li>
+                              <li><a href="{% url 'income-export-csv' 182 %}" class="dropdown-item">Last 6 months</a></li>
+                              <li><a href="{% url 'income-export-csv' 365 %}" class="dropdown-item">Last year</a></li>
                             </ul>
                         </div>
                         
     
-                        <div class="dropdown m-2">
+                        <div class="dropdown ms-4">
                             <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                               Export as XLS
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a href="{% url 'expenses-export-xls' 7 %}" class="dropdown-item">Last week</a></li>
-                              <li><a href="{% url 'expenses-export-xls' 30 %}"  class="dropdown-item">Last month</a></li>
-                              <li><a href="{% url 'expenses-export-xls' 120 %}" class="dropdown-item">Last 4 months</a></li>
-                              <li><a href="{% url 'expenses-export-xls' 182 %}" class="dropdown-item">Last 6 months</a></li>
-                              <li><a href="{% url 'expenses-export-xls' 365 %}" class="dropdown-item">Last year</a></li>
+                                <li><a href="{% url 'income-export-xls' 7 %}" class="dropdown-item">Last week</a></li>
+                              <li><a href="{% url 'income-export-xls' 30 %}"  class="dropdown-item">Last month</a></li>
+                              <li><a href="{% url 'income-export-xls' 120 %}" class="dropdown-item">Last 4 months</a></li>
+                              <li><a href="{% url 'income-export-xls' 182 %}" class="dropdown-item">Last 6 months</a></li>
+                              <li><a href="{% url 'income-export-xls' 365 %}" class="dropdown-item">Last year</a></li>
                             </ul>
                         </div>
     
-                        <div class="dropdown m-2">
+                        <div class="dropdown ms-4">
                             <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                               Export as PDF
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a href="{% url 'expenses-export-pdf' 7 %}" class="dropdown-item">Last week</a></li>
-                              <li><a href="{% url 'expenses-export-pdf' 30 %}"  class="dropdown-item">Last month</a></li>
-                              <li><a href="{% url 'expenses-export-pdf' 120 %}" class="dropdown-item">Last 4 months</a></li>
-                              <li><a href="{% url 'expenses-export-pdf' 182 %}" class="dropdown-item">Last 6 months</a></li>
-                              <li><a href="{% url 'expenses-export-pdf' 365 %}" class="dropdown-item">Last year</a></li>
+                                <li><a href="{% url 'income-export-pdf' 7 %}" class="dropdown-item">Last week</a></li>
+                              <li><a href="{% url 'income-export-pdf' 30 %}"  class="dropdown-item">Last month</a></li>
+                              <li><a href="{% url 'income-export-pdf' 120 %}" class="dropdown-item">Last 4 months</a></li>
+                              <li><a href="{% url 'income-export-pdf' 182 %}" class="dropdown-item">Last 6 months</a></li>
+                              <li><a href="{% url 'income-export-pdf' 365 %}" class="dropdown-item">Last year</a></li>
                             </ul>
                         </div>
                     </div>
-
-
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <input type="text" class="form-control" id="searchField" placeholder="Search">
                     </div>
@@ -83,7 +78,7 @@
                     <thead>
                         <tr>
                             <th>Amount ({{currency}})</th>
-                            <th>Category</th>
+                            <th>Source</th>
                             <th>Description</th>
                             <th>Date</th>
                             <th></th>
@@ -91,14 +86,14 @@
                     </thead>
     
                     <tbody>
-                        {% for expense in page_obj %}
+                        {% for income in page_obj %}
                         <tr>
-                            <td> {{expense.amount}} </td>
-                            <td> {{expense.category}} </td>
-                            <td> {{expense.description}} </td>
-                            <td> {{expense.date}} </td>
+                            <td> {{income.amount}} </td>
+                            <td> {{income.source}} </td>
+                            <td> {{income.description}} </td>
+                            <td> {{income.date}} </td>
                             
-                            <td><a href="{% url 'expense-edit' expense.id %}" class="btn btn-primary"> Edit </a></td>
+                            <td><a href="{% url 'income-edit' income.id %}" class="btn btn-primary"> Edit </a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -111,7 +106,7 @@
                     <thead>
                         <tr>
                             <th>Amount ({{currency}})</th>
-                            <th>Category</th>
+                            <th>Souce</th>
                             <th>Description</th>
                             <th>Date</th>
                             <th></th>
@@ -142,13 +137,13 @@
                 </ul>
             </div>
         {% endif %}
-    </div>
+    </div> 
 </div>
 <script
 src="https://code.jquery.com/jquery-3.7.0.js"
 integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
 crossorigin="anonymous"/></script>
-<script src="{% static 'js/searchExpenses.js' %}">
+<script src="{% static 'js/searchIncome.js' %}">
 
 </script>
 {% endblock content %}

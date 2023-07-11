@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'expenses',
     'authentication',
     'userpreferences',
+    'userincome', 
     'rest_framework',
     'validate_email'
 ]

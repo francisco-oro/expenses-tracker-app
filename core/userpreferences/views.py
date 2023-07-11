@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 import os
 import json
 from .models import UserPreferences
 
 
 # Create your views here
-
+@login_required(login_url='/auth/login/')
 def index(request):
     exists = UserPreferences.objects.filter(user=request.user).exists()
     user_preferences = None 

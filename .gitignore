@@ -161,3 +161,6 @@ cython_debug/
 
 # Django support extensions
 vscode-django/
+
+# Frontend libraries
+node_modules/
