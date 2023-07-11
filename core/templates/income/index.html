@@ -21,7 +21,11 @@
      <div class="container mt-4">
         {% if income.count %}
             <div class="row">
-                <div class="col-md-8"></div>
+                <div class="col-md-8">
+                    <a href="{% url 'income-export-csv' %}" class="btn btn-secondary">Export CSV</a>
+                    <a href="{% url 'income-export-xlx' %}" class="btn btn-secondary">Export Excel</a>
+                    <a href="{% url 'income-export-pdf' %}" class="btn btn-secondary">Export PDF</a>
+                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <input type="text" class="form-control" id="searchField" placeholder="Search">

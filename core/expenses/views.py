@@ -7,6 +7,11 @@ from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum
 from django.template.loader import render_to_string
 from rest_framework import status
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.tables import Table, TableStyle, colors
 from .models import *
 from .serializers import *
 import json
@@ -15,7 +20,7 @@ import datetime
 import csv
 import xlwt
 from weasyprint import HTML
-import tempfile
+import pdfkit
 import pdb
 # Create your views here.
 
@@ -276,7 +281,7 @@ def dashboard_view(request):
 
 def export_csv(request):
     response = HttpResponse(content_type = 'text/csv')
-    response['Content-Disposition'] = 'attachment: filename = Expenses' + str(datetime.datetime.now()) + '.csv'
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_expenses_{datetime.datetime.now()}.csv"'
 
     writer = csv.writer(response)
     writer.writerow(['Amount', 'Description', 'Category', 'Date'])
@@ -289,7 +294,7 @@ def export_csv(request):
 
 def export_xlx(request):
     response = HttpResponse(content_type = 'application/mx-excel')
-    response['Content-Disposition'] = 'attachment: filename = Expenses' + str(datetime.datetime.now()) + '.xls'
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_expenses_{datetime.datetime.now()}.xls"'
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Expenses')
     row_num = 0
@@ -314,23 +319,27 @@ def export_xlx(request):
     return response
 
 def export_pdf(request):
-    response = HttpResponse(content_type = 'application/pdf')
-    response['Content-Disposition'] = 'attachment: filename = Expenses' + str(datetime.datetime.now()) + '.pdf'
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_expenses_{datetime.datetime.now()}.pdf"'
 
-    response['Content-Transfer-Encoding'] = 'binary'
-
-    html_string = render_to_string('expenses/pdf-output.html', {'expenses': [], 'total': 0})
-    html = HTML(string=html_string)
+    # Create the PDF object
+    p = SimpleDocTemplate(response, pagesize=letter)
+    # Set the column names
+    columns = ['Amount', 'Description', 'Category', 'Date']
+    table_data = [columns,]
+    # Every element in rows is a tuple
+    rows = Expense.objects.filter(owner=request.user).values_list('amount', 'description', 'category', 'date')
+    for row in rows:
+        table_data.append(row)
     
-    result = html.write_pdf()
+    c_width = [1*inch, 3.5*inch, 1.3*inch, 1*inch]
+    t = Table(table_data, rowHeights=40, repeatRows=1, colWidths=c_width)
+    # Note (0,0) references the top-left corner. Similarly, (-1, -1) references the bottom-right corner
+    t.setStyle(TableStyle([('BACKGROUND', (0,0), (-1, 0), colors.limegreen),]))
 
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
+    elements = []
+    elements.append(t)
+    p.build(elements)
 
-
-        output = open(output.name, 'rb')
-
-        response.write(output.read())
 
     return response

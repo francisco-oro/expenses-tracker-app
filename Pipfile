@@ -17,6 +17,8 @@ validate-email = "*"
 six = "*"
 xlwt = "*"
 weasyprint = "*"
+reportlab = "*"
+pdfkit = "*"
 
 [dev-packages]
 
