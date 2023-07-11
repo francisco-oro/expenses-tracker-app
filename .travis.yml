@@ -5,7 +5,7 @@ python:
 env:
     - SECRET_KEY='TEST'
 services:
-   - postgresql
+   - SQLite "3.21"
 install:
     - pip install -r core/requirements.txt
 
