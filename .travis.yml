@@ -11,4 +11,3 @@ install:
 
 script:
     -  python core/manage.py test
-after_success:
