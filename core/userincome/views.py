@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.db.models import Sum
+from rest_framework import status
 from .models import *
 import json
 from userpreferences.models import UserPreferences
@@ -205,6 +207,55 @@ def income_source_summary(request, opt):
              income_summary[source] = get_income_source_amount(source)
 
      return JsonResponse(income_summary, safe=False)
+
+def timeline_income_tracker(request, opt):
+    try:
+        calendar = []
+        today = datetime.datetime.today()
+        start_from = today - datetime.timedelta(days=opt)
+         
+        expenses = UserIncome.objects.filter(date__gte=start_from, date__lte=today, owner=request.user)
+        
+        if opt >= 60:
+            count = [0] * (opt // 30)
+
+            for i in range(opt // 30):
+                 
+                 start_month = today - datetime.timedelta(days=(opt - (i * 30)))
+                 end_month = today - datetime.timedelta(days=(opt - ((i + 1) * 30 - 1)))
+
+                 monthly_expenses = expenses.filter(date__gte=start_month, date__lte=end_month)
+                 total_expenses = monthly_expenses.aggregate(total_amount=Sum('amount'))['total_amount']
+
+                 count[i] = total_expenses or 0
+                 formatted_month = start_month.strftime("%B")
+                 
+                 calendar.append(formatted_month)
+        
+        else:
+            count = [0] * opt
+             
+            for i in range(opt):    
+
+                current_day_expenses = expenses.filter(date=start_from)
+                count[i] = sum(expense.amount for expense in current_day_expenses)
+                
+                if opt >= 30:
+                    formatted_date = start_from.strftime("%d/%m/%Y")
+                else:
+                    formatted_date = start_from.strftime("%A")
+                calendar.append(formatted_date)
+                start_from += datetime.timedelta(days=1)
+         
+        content = {
+            'count': count,
+            'tags': calendar
+        }
+
+        return JsonResponse(content)
+    except Exception:
+        return HttpResponse('You must provide a valid days count', status.HTTP_400_BAD_REQUEST)
+
 
 def stats_view(request):
      return render(request, 'income/stats.html')

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/stats.css' %}">
+{% endblock link %}
+{% block content %}
+<div class="container mt-4">
+    {% include 'partials/_messages.html' %}
+        <div class="col-md-10">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Summary</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <div class="row bg-secondary p-4 align-items-center">
+
+            <div class="text-center row">
+                <h2>Dashboard summary</h2>
+            </div>
+
+            <div class="col-md-2">
+                <a href="{% url 'expenses' %}" class="btn btn-danger"> Back </a>
+            </div>
+
+            <div class="col-md-10 d-flex justify-content-between ">
+                <div class="dropdown m-2">
+                    <a  class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Line Chart
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><button onclick="lineChart('/expenses/tracker/7/', '/income/tracker/7/', 'Last week');"  class="dropdown-item">Last week</button></li>
+                      <li><button onclick="lineChart('/expenses/tracker/30/','/income/tracker/30/' ,'Last month');"  class="dropdown-item">Last month</button></li>
+                      <li><button onclick="lineChart('/expenses/tracker/120/','/income/tracker/120/', 'Last 4 months');" class="dropdown-item">Last 4 months</button></li>
+                      <li><button onclick="lineChart('/expenses/tracker/182/','/income/tracker/182/', 'Last 6 months');" class="dropdown-item">Last 6 months</button></li>
+                      <li><button onclick="lineChart('/expenses/tracker/365/','/income/tracker/365/' ,'Last year');" class="dropdown-item">Last year</button></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown m-2">
+                    <a  class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Bar chart
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><button onclick="combinedBarChart('/expenses/tracker/7/','/income/tracker/7/' ,'Last week');"  class="dropdown-item">Last week</button></li>
+                      <li><button onclick="combinedBarChart('/expenses/tracker/30/', '/income/tracker/30/','Last month');"  class="dropdown-item">Last month</button></li>
+                      <li><button onclick="combinedBarChart('/expenses/tracker/120/','/income/tracker/120/' ,'Last 4 months');" class="dropdown-item">Last 4 months </button></li>
+                      <li><button onclick="combinedBarChart('/expenses/tracker/182/','/income/tracker/182/' ,'Last 6 months');" class="dropdown-item"> Last 6 months </button></li>
+                      <li><button onclick="combinedBarChart('/expenses/tracker/365/', '/income/tracker/365/','Last year');" class="dropdown-item"> Last year </button></li>
+                    </ul>
+                </div>
+
+
+                <div class="dropdown m-2">
+                    <a  class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Radar Chart
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><button onclick="radarChart('/expenses/tracker/7/','/income/tracker/7/', 'Last week');"  class="dropdown-item">Last week</button></li>
+                      <li><button onclick="radarChart('/expenses/tracker/30/','/income/tracker/30/', 'Last month');"  class="dropdown-item">Last month</button></li>
+                      <li><button onclick="radarChart('/expenses/tracker/120/','/income/tracker/120/' ,'Last 4 months');" class="dropdown-item">Last 4 months</button></li>
+                      <li><button onclick="radarChart('/expenses/tracker/180/', '/income/tracker/182/','Last 6 months');" class="dropdown-item">Last 6 months</button></li>
+                      <li><button onclick="radarChart('/expenses/tracker/365/', '/income/tracker/365/','Last year');" class="dropdown-item">Last year</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="chart" width="400" height="400" aria-label="Hello ARIA World" role="img"></canvas>
+
+    </div>
+
+<script
+src="https://code.jquery.com/jquery-3.7.0.js"
+integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+crossorigin="anonymous"></script>
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
+<script src="{% static 'js/chartJS/composed-chart.js' %}"/>
+{% endblock content %}
