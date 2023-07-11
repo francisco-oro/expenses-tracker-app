@@ -26,10 +26,49 @@
 
 
                 </div>
-                <div class="col-md-4">  
-                    <a href="{% url 'expenses-export-csv' %}" class="btn btn-secondary">Export CSV</a>
-                    <a href="{% url 'expenses-export-xlx' %}" class="btn btn-secondary">Export Excel</a>
-                    <a href="{% url 'expenses-export-pdf' %}" class="btn btn-secondary">Export PDF</a>
+                <div class="col-md-10 d-flex justify-content-between">  
+                    <div class="col-md-8 d-flex flex-wrap">
+                        <div class="dropdown m-2">
+                            <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              Export as CSV
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a href="{% url 'expenses-export-csv' 7 %}" class="dropdown-item">Last week</a></li>
+                              <li><a href="{% url 'expenses-export-csv' 30 %}"  class="dropdown-item">Last month</a></li>
+                              <li><a href="{% url 'expenses-export-csv' 120 %}" class="dropdown-item">Last 4 months</a></li>
+                              <li><a href="{% url 'expenses-export-csv' 182 %}" class="dropdown-item">Last 6 months</a></li>
+                              <li><a href="{% url 'expenses-export-csv' 365 %}" class="dropdown-item">Last year</a></li>
+                            </ul>
+                        </div>
+                        
+    
+                        <div class="dropdown m-2">
+                            <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              Export as XLS
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a href="{% url 'expenses-export-xls' 7 %}" class="dropdown-item">Last week</a></li>
+                              <li><a href="{% url 'expenses-export-xls' 30 %}"  class="dropdown-item">Last month</a></li>
+                              <li><a href="{% url 'expenses-export-xls' 120 %}" class="dropdown-item">Last 4 months</a></li>
+                              <li><a href="{% url 'expenses-export-xls' 182 %}" class="dropdown-item">Last 6 months</a></li>
+                              <li><a href="{% url 'expenses-export-xls' 365 %}" class="dropdown-item">Last year</a></li>
+                            </ul>
+                        </div>
+    
+                        <div class="dropdown m-2">
+                            <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              Export as PDF
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a href="{% url 'expenses-export-pdf' 7 %}" class="dropdown-item">Last week</a></li>
+                              <li><a href="{% url 'expenses-export-pdf' 30 %}"  class="dropdown-item">Last month</a></li>
+                              <li><a href="{% url 'expenses-export-pdf' 120 %}" class="dropdown-item">Last 4 months</a></li>
+                              <li><a href="{% url 'expenses-export-pdf' 182 %}" class="dropdown-item">Last 6 months</a></li>
+                              <li><a href="{% url 'expenses-export-pdf' 365 %}" class="dropdown-item">Last year</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
 
                     <div class="form-group">
                         <input type="text" class="form-control" id="searchField" placeholder="Search">

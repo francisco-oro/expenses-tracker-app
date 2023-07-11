@@ -15,59 +15,64 @@
             </nav>
         </div>
         
-        <div class="row bg-primary p-4 align-items-center">
+        <div class="row bg-body-tertiary p-4 align-items-center">
 
             <div class="text-center row">
                 <h2> Income summary </h2>
             </div>
-
-            <div class="col-md-2">
-                <a href="{% url 'income' %}" class="btn btn-danger"> Back </a>
+            <div class="row mt-5">
+                <div class="col-md-2">
+                    <a href="{% url 'income' %}" class="btn btn-danger"> Back </a>
+                </div>
+    
+                <div class="col-md-10 d-flex justify-content-end ">
+                    <div class="dropdown m-2">
+                        <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Bar Chart
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><button onclick="displayBarChart('/income/source/summary/7/', 'Last week');"  class="dropdown-item">Last week</button></li>
+                          <li><button onclick="displayBarChart('/income/source/summary/30/', 'Last month');"  class="dropdown-item">Last month</button></li>
+                          <li><button onclick="displayBarChart('/income/source/summary/120/', 'Last 4 months');" class="dropdown-item">Last 4 months</button></li>
+                          <li><button onclick="displayBarChart('/income/source/summary/182/', 'Last 6 months');" class="dropdown-item">Last 6 months</button></li>
+                          <li><button onclick="displayBarChart('/income/source/summary/365/', 'Last year');" class="dropdown-item">Last year</button></li>
+                        </ul>
+                    </div>
+    
+                    <div class="dropdown m-2">
+                        <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Doughnut Chart
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><button onclick="displayDoughnutChart('/income/source/summary/7/', 'Last week');"  class="dropdown-item">Last week</button></li>
+                          <li><button onclick="displayDoughnutChart('/income/source/summary/30/', 'Last month');"  class="dropdown-item">Last month</button></li>
+                          <li><button onclick="displayDoughnutChart('/income/source/summary/120/', 'Last 4 months');" class="dropdown-item">Last 4 months </button></li>
+                          <li><button onclick="displayDoughnutChart('/income/source/summary/182/', 'Last 6 months');" class="dropdown-item"> Last 6 months </button></li>
+                          <li><button onclick="displayDoughnutChart('/income/source/summary/365/', 'Last year');" class="dropdown-item"> Last year </button></li>
+                        </ul>
+                    </div>
+    
+    
+                    <div class="dropdown m-2">
+                        <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Polar chart
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><button onclick="displayDoughnutChart('/income/source/summary/7/', 'Last week');"  class="dropdown-item">Last week</button></li>
+                          <li><button onclick="displayPolarChart('/income/source/summary/30/', 'Last month');"  class="dropdown-item">Last month</button></li>
+                          <li><button onclick="displayPolarChart('/income/source/summary/120/', 'Last 4 months');" class="dropdown-item">Last 4 months</button></li>
+                          <li><button onclick="displayPolarChart('/income/source/summary/182/', 'Last 6 months');" class="dropdown-item">Last 6 months</button></li>
+                          <li><button onclick="displayPolarChart('/income/source/summary/365/', 'Last year');" class="dropdown-item">Last year</button></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-10 d-flex justify-content-between ">
-                <div class="dropdown m-2">
-                    <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Bar Chart
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button onclick="displayBarChart('/income/source/summary/1/', 'Last week');"  class="dropdown-item">Last week</button></li>
-                      <li><button onclick="displayBarChart('/income/source/summary/2/', 'Last month');"  class="dropdown-item">Last month</button></li>
-                      <li><button onclick="displayBarChart('/income/source/summary/3/', 'Last 4 months');" class="dropdown-item">Last 4 months</button></li>
-                      <li><button onclick="displayBarChart('/income/source/summary/4/', 'Last 6 months');" class="dropdown-item">Last 6 months</button></li>
-                      <li><button onclick="displayBarChart('/income/source/summary/5/', 'Last year');" class="dropdown-item">Last year</button></li>
-                    </ul>
-                </div>
-
-                <div class="dropdown m-2">
-                    <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Doughnut Chart
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button onclick="displayDoughnutChart('/income/source/summary/1/', 'Last week');"  class="dropdown-item">Last week</button></li>
-                      <li><button onclick="displayDoughnutChart('/income/source/summary/2/', 'Last month');"  class="dropdown-item">Last month</button></li>
-                      <li><button onclick="displayDoughnutChart('/income/source/summary/3/', 'Last 4 months');" class="dropdown-item">Last 4 months </button></li>
-                      <li><button onclick="displayDoughnutChart('/income/source/summary/4/', 'Last 6 months');" class="dropdown-item"> Last 6 months </button></li>
-                      <li><button onclick="displayDoughnutChart('/income/source/summary/5/', 'Last year');" class="dropdown-item"> Last year </button></li>
-                    </ul>
-                </div>
-
-
-                <div class="dropdown m-2">
-                    <a  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Polar chart
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button onclick="displayDoughnutChart('/income/source/summary/1/', 'Last week');"  class="dropdown-item">Last week</button></li>
-                      <li><button onclick="displayPolarChart('/income/source/summary/2/', 'Last month');"  class="dropdown-item">Last month</button></li>
-                      <li><button onclick="displayPolarChart('/income/source/summary/3/', 'Last 4 months');" class="dropdown-item">Last 4 months</button></li>
-                      <li><button onclick="displayPolarChart('/income/source/summary/4/', 'Last 6 months');" class="dropdown-item">Last 6 months</button></li>
-                      <li><button onclick="displayPolarChart('/income/source/summary/5/', 'Last year');" class="dropdown-item">Last year</button></li>
-                    </ul>
-                </div>
-            </div>
         </div>
         
+        <div class="row">
+
+        </div>
         <canvas id="chart" class="canvas" width="400" height="400"></canvas>
 
     </div>

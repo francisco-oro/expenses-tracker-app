@@ -11,8 +11,8 @@ urlpatterns = [
     path("category/summary/<int:opt>/", views.expense_category_summary, name="expense_category_summary"),
     path("stats/", views.stats_view, name="stats"),
     path("dashboard/",views.dashboard_view, name="dashboard"),
-    path("export/csv/", views.export_csv, name="export-csv"),
-    path("export/xlx/", views.export_xlx, name="export-xlx"),
-    path("export/pdf/", views.export_pdf, name="export-pdf"),
+    path("expenses/export/csv/<int:opt>/", views.export_csv, name="expenses-export-csv"),
+    path("expenses/export/xls/<int:opt>/", views.export_xlx, name="expenses-export-xls"),
+    path("expenses/export/pdf/<int:opt>/", views.export_pdf, name="expenses-export-pdf"),
     path("expenses/tracker/<int:opt>/", views.timeline_expenses_tracker, name="expenses-tracker"),
 ]

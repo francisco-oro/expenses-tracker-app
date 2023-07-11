@@ -9,8 +9,15 @@ from rest_framework import status
 from .models import *
 import json
 from userpreferences.models import UserPreferences
-# Create your views here.
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.tables import Table, TableStyle, colors
 import datetime
+import pdb
+import xlwt
+import csv
 
 def search_income(request):
      if request.method == 'POST':
@@ -158,34 +165,12 @@ def delete_income(request, id):
      return redirect('income')
 
 def income_source_summary(request, opt):
-
      today = datetime.date.today()
-
-     if opt == 1:
-        one_week_ago = today - datetime.timedelta(days=7)
-        start_from = one_week_ago
-
-     elif opt == 2:
-        one_month_ago = today - datetime.timedelta(days=30)
-        start_from = one_month_ago
-
-     elif opt == 3:
-        four_months_ago = today - datetime.timedelta(days=30*4)
-        start_from = four_months_ago
-     
-     elif opt == 4:
-        six_months_ago = today - datetime.timedelta(days=30*6)
-        start_from = six_months_ago
-     
-     elif opt == 5:
-        one_year_ago = today - datetime.timedelta(days=365)
-        start_from = one_year_ago
-     else:
-         return JsonResponse({"error", "Invalid option key"}, safe=False)
-
+     start_from = today - datetime.timedelta(days=opt)
 
      income = UserIncome.objects.filter(date__gte = start_from, date__lte = today, owner=request.user)
      
+
      income_summary = {}
 
      def get_source(income):
@@ -206,6 +191,8 @@ def income_source_summary(request, opt):
         for source in source_list:
              income_summary[source] = get_income_source_amount(source)
 
+
+     
      return JsonResponse(income_summary, safe=False)
 
 def timeline_income_tracker(request, opt):
@@ -259,3 +246,79 @@ def timeline_income_tracker(request, opt):
 
 def stats_view(request):
      return render(request, 'income/stats.html')
+
+
+# Exporting views
+def export_csv(request, opt):
+    today = datetime.datetime.today()
+    start_from = today - datetime.timedelta(days=opt)
+
+    response = HttpResponse(content_type = 'text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_from_{start_from}_to_{datetime.datetime.today()}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Amount', 'Description', 'Source', 'Date'])
+
+    income = UserIncome.objects.filter(owner=request.user, date__gte = start_from, date__lte = today)
+
+    for instance in income:
+        writer.writerow([instance.amount, instance.description, instance.source, instance.date])
+
+
+def export_xlx(request, opt):
+    today = datetime.datetime.today()
+    start_from = today - datetime.timedelta(days=opt)
+
+    response = HttpResponse(content_type = 'application/mx-excel')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_from_{start_from}_to_{datetime.datetime.today()}.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Expenses')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Amount', 'Description', 'Source', 'Date']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    
+    font_style = xlwt.XFStyle()
+
+    rows = UserIncome.objects.filter(owner = request.user, date__gte = start_from, date__lte = today).values_list('amount', 'description', 'source', 'date')
+
+    for row in rows:
+        row_num += 1
+
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, str(row[col_num]), font_style)
+    wb.save(response)
+    
+    return response
+
+def export_pdf(request, opt):
+    today = datetime.datetime.today()
+    start_from = today - datetime.timedelta(days=opt)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{request.user.username}_from_{start_from}_to_{datetime.datetime.today()}.pdf"'
+
+    # Create the PDF object
+    p = SimpleDocTemplate(response, pagesize=letter)
+    # Set the column names
+    columns = ['Amount', 'Description', 'Source', 'Date']
+    table_data = [columns,]
+    # Every element in rows is a tuple
+    rows = UserIncome.objects.filter(owner=request.user, date__gte = start_from, date__lte = today).values_list('amount', 'description', 'source', 'date')
+    for row in rows:
+        table_data.append(row)
+    
+    c_width = [1*inch, 3.5*inch, 1.3*inch, 1*inch]
+    t = Table(table_data, rowHeights=40, repeatRows=1, colWidths=c_width)
+    # Note (0,0) references the top-left corner. Similarly, (-1, -1) references the bottom-right corner
+    t.setStyle(TableStyle([('BACKGROUND', (0,0), (-1, 0), colors.limegreen),]))
+
+    elements = []
+    elements.append(t)
+    p.build(elements)
+
+
+    return response

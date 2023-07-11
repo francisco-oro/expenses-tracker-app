@@ -174,29 +174,7 @@ def delete_expense(request, id):
 def expense_category_summary(request, opt):
 
      today = datetime.date.today()
-
-     if opt == 1:
-        one_week_ago = today - datetime.timedelta(days=7)
-        start_from = one_week_ago
-
-     elif opt == 2:
-        one_month_ago = today - datetime.timedelta(days=30)
-        start_from = one_month_ago
-
-     elif opt == 3:
-        four_months_ago = today - datetime.timedelta(days=30*4)
-        start_from = four_months_ago
-     
-     elif opt == 4:
-        six_months_ago = today - datetime.timedelta(days=30*6)
-        start_from = six_months_ago
-     
-     elif opt == 5:
-        one_year_ago = today - datetime.timedelta(days=365)
-        start_from = one_year_ago
-     else:
-         return JsonResponse({"error", "Invalid option key"}, safe=False)
-
+     start_from = today - datetime.timedelta(days=opt)
 
      expenses = Expense.objects.filter(date__gte = start_from, date__lte = today, owner=request.user)
      
@@ -249,7 +227,6 @@ def timeline_expenses_tracker(request, opt):
                  formatted_month = start_month.strftime("%B")
                  
                  calendar.append(formatted_month)
-        
         else:
             count = [0] * opt
              
@@ -279,20 +256,27 @@ def timeline_expenses_tracker(request, opt):
 def dashboard_view(request):
     return render(request, 'dashboard/stats.html')
 
-def export_csv(request):
+def export_csv(request, opt):
+    today = datetime.datetime.today()
+    start_from = today - datetime.timedelta(days=opt)
+
     response = HttpResponse(content_type = 'text/csv')
     response['Content-Disposition'] = f'attachment; filename="{request.user.username}_expenses_{datetime.datetime.now()}.csv"'
 
     writer = csv.writer(response)
     writer.writerow(['Amount', 'Description', 'Category', 'Date'])
 
-    expenses = Expense.objects.filter(owner=request.user)
+    expenses = Expense.objects.filter(owner=request.user, date__gte = start_from, date__lte = today)
 
     for expense in expenses:
         writer.writerow([expense.amount, expense.description, expense.category, expense.date])
+    return response
 
 
-def export_xlx(request):
+def export_xlx(request, opt):
+    today = datetime.datetime.today()
+    start_from = today - datetime.timedelta(days=opt)
+
     response = HttpResponse(content_type = 'application/mx-excel')
     response['Content-Disposition'] = f'attachment; filename="{request.user.username}_expenses_{datetime.datetime.now()}.xls"'
     wb = xlwt.Workbook(encoding='utf-8')
@@ -307,7 +291,7 @@ def export_xlx(request):
     
     font_style = xlwt.XFStyle()
 
-    rows = Expense.objects.filter(owner = request.user).values_list('amount', 'description', 'category', 'date')
+    rows = Expense.objects.filter(owner = request.user, date__gte = start_from, date__lte = today).values_list('amount', 'description', 'category', 'date')
 
     for row in rows:
         row_num += 1
@@ -318,7 +302,10 @@ def export_xlx(request):
     
     return response
 
-def export_pdf(request):
+def export_pdf(request, opt):
+    today = datetime.datetime.today()
+    start_from = today - datetime.timedelta(days=opt)
+
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{request.user.username}_expenses_{datetime.datetime.now()}.pdf"'
 
@@ -328,7 +315,7 @@ def export_pdf(request):
     columns = ['Amount', 'Description', 'Category', 'Date']
     table_data = [columns,]
     # Every element in rows is a tuple
-    rows = Expense.objects.filter(owner=request.user).values_list('amount', 'description', 'category', 'date')
+    rows = Expense.objects.filter(owner=request.user, date__gte = start_from, date__lte = today).values_list('amount', 'description', 'category', 'date')
     for row in rows:
         table_data.append(row)
     
