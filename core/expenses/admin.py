@@ -9,4 +9,4 @@ class ExpenseAdmin(admin.ModelAdmin):
 
 admin.site.register(Expense, ExpenseAdmin)
 admin.site.register(Category)
-
+admin.site.register(Sample)

@@ -20,7 +20,6 @@ from userpreferences.models import UserPreferences
 import datetime
 import csv
 import xlwt
-from weasyprint import HTML
 import pdfkit
 import pdb
 # Create your views here.
