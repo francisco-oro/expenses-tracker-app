@@ -1,10 +1,14 @@
-#!/bin/bash
+#!/bin/bash 
 
-set -c
+set -e
 
-python3 manage.py wait_for_db
-python3 manage.py collectstatic --noinput
-python3 manage.py makemigrations
-python3 manage.py migrate
+ls -la /vol/
+ls -la /vol/web
 
-uswgi --socket :9000 --workers 4 --master --enable-threads --module core.wsgi
+whoami
+
+python manage.py wait_for_db
+python manage.py collectstatic --noinput
+python manage.py migrate
+
+uwsgi --socket :9000 --workers 4 --master --enable-threads --module core.wsgi
