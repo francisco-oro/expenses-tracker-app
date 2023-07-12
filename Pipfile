@@ -19,6 +19,8 @@ xlwt = "*"
 weasyprint = "*"
 reportlab = "*"
 pdfkit = "*"
+cffi = "*"
+wheel = "*"
 
 [dev-packages]
 

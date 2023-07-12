@@ -28,9 +28,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.getenv('DEBUG')) == '1'
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','localhost']
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.getenv('ALLOWED_HOST', '').split(','),
+    )
+)
 
 
 # Application definition
@@ -97,14 +103,12 @@ POSTGRES_DB = os.getenv('POSTGRES_DB')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_HOST = os.getenv('POSTGRES_HOST')
-POSTGRES_PORT = os.getenv('POSTGRES_PORT')
 
 DB_IS_AVAIL = all([
     POSTGRES_DB,
     POSTGRES_PASSWORD, 
     POSTGRES_USER,
     POSTGRES_HOST,
-    POSTGRES_PORT
 ])
 
 POSTGRES_READY=str(os.environ.get('POSTGRES_READY')) == "1"
@@ -117,7 +121,6 @@ if DB_IS_AVAIL and POSTGRES_READY:
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT'),
         }
     }
 
@@ -156,9 +159,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/static/'
+MEDIA_URL = 'static/media/'
+
+MEDIA_ROOT = 'vol/web/media'
+STATIC_ROOT = 'vol/web/static'
+
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
