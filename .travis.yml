@@ -5,9 +5,11 @@ python:
 env:
     - SECRET_KEY='TEST'
 services:
-   - postgresql
+   - docker 
+
 install:
     - pip install -r core/requirements.txt
+
 
 script:
     - cd core
