@@ -21,7 +21,4 @@ pending
  ### Frontend
 To enhance the user experience, the app utilizes HTML templates, CSS, JQuery and Bootstrap 5 for the frontend. It provides an intuitive and responsive interface that allows users to easily navigate through different sections, view expense details, and interact with the application seamlessly. 
  
-In addition, the app incorporates features like data validation, error handling, and user feedback using Django's form handling capabilities. This ensures that the data entered by users is validated and processed correctly, providing a robust and secure experience. 
-
-[![Build Status](https://app.travis-ci.com/francisco-oro/monthly-expense-tracker.svg?branch=main)](https://app.travis-ci.com/francisco-oro/monthly-expense-tracker)
-
+In addition, the app incorporates features like data validation, error handling, and user feedback using Django's form handling capabilities. This ensures that the data entered by users is validated and processed correctly, providing a robust and secure experience. It's worth noting that this project uses Travis CI to run all the necessary tests.
